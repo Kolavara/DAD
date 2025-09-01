@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CNC Pro - Advanced Conversational Programming</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-50: #f0f4ff;
+            --primary-100: #e0e7ff;
+            --primary-500: #6366f1;
+            --primary-600: #4f46e5;
+            --primary-700: #4338ca;
+            --primary-900: #312e81;
+            
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            
+            --success-500: #10b981;
+            --error-500: #ef4444;
+            --warning-500: #f59e0b;
+            
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            color: var(--gray-800);
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .app-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--gray-200);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .brand-text h1 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+
+        .brand-text p {
+            color: var(--gray-500);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--success-500);
+            color: white;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .main-content {
+            flex: 1;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid var(--gray-200);
+            box-shadow: var(--shadow-xl);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .panel:hover {
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+            transform: translateY(-2px);
+        }
+
+        .panel-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--gray-200);
+            background: linear-gradient(135deg, var(--gray-50), var(--gray-100));
+        }
+
+        .panel-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .panel-title i {
+            color: var(--primary-500);
+            font-size: 1.125rem;
+        }
+
+        .panel-content {
+            padding: 2rem;
+        }
+
+        .form-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--gray-700);
+            font-size: 0.875rem;
+            letter-spacing: 0.025em;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            background: var(--gray-50);
+            color: var(--gray-900);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+            pointer-events: none;
+        }
+
+        .button-section {
+            grid-column: 1 / -1;
+            margin-top: 2rem;
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--gray-600), var(--gray-700));
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--error-500), #dc2626);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .output-panel {
+            grid-column: 1 / -1;
+            margin-top: 2rem;
+        }
+
+        .gcode-output {
+            background: var(--gray-900);
+            color: #10b981;
+            padding: 1.5rem;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 2px solid var(--gray-700);
+            position: relative;
+        }
+
+        .gcode-output::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .gcode-output::-webkit-scrollbar-track {
+            background: var(--gray-800);
+            border-radius: 4px;
+        }
+
+        .gcode-output::-webkit-scrollbar-thumb {
+            background: var(--primary-500);
+            border-radius: 4px;
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--primary-500);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .copy-button:hover {
+            opacity: 1;
+        }
+
+        .visualization-container {
+            background: var(--gray-50);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 2px solid var(--gray-200);
+        }
+
+        #toolpathCanvas {
+            border: 2px solid var(--gray-300);
+            border-radius: 12px;
+            background: white;
+            box-shadow: var(--shadow-md);
+            max-width: 100%;
+            height: auto;
+        }
+
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            display: none;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 500;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .alert-warning {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+
+        .cycle-info {
+            background: var(--primary-50);
+            border: 1px solid var(--primary-200);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+            color: var(--primary-700);
+        }
+
+        .parameter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .parameter-card {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .parameter-card:hover {
+            background: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .parameter-card h4 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--gray-300);
+            border-top: 4px solid var(--primary-500);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .quick-btn {
+            padding: 0.5rem 1rem;
+            background: var(--gray-100);
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quick-btn:hover {
+            background: var(--primary-500);
+            color: white;
+            border-color: var(--primary-500);
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .parameter-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .main-content {
+                padding: 1rem;
+                gap: 1.5rem;
+            }
+            
+            .parameter-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .button-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .brand-text h1 {
+                font-size: 1.5rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--gray-900);
+            color: white;
+            text-align: center;
+            border-radius: 8px;
+            padding: 8px 12px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.75rem;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--gray-200);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-500), var(--primary-600));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo">
+                        <i class="fas fa-microchip"></i>
+                    </div>
+                    <div class="brand-text">
+                        <h1>CNC Pro</h1>
+                        <p>Advanced Conversational Programming Suite</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <div class="status-badge">
+                        <div class="status-dot"></div>
+                        System Ready
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="panel fade-in">
+                <div class="panel-header">
+                    <h2 class="panel-title">
+                        <i class="fas fa-cogs"></i>
+                        Machine Configuration
+                    </h2>
+                </div>
+                <div class="panel-content">
+                    <div class="quick-actions">
+                        <button class="quick-btn" onclick="loadPreset('drilling')">Drilling Preset</button>
+                        <button class="quick-btn" onclick="loadPreset('tapping')">Tapping Preset</button>
+                        <button class="quick-btn" onclick="loadPreset('reaming')">Reaming Preset</button>
+                    </div>
+                    
+                    <div class="form-section">
+                        <div class="parameter-grid">
+                            <div class="parameter-card">
+                                <h4><i class="fas fa-hashtag"></i> Program Setup</h4>
+                                <div class="form-group">
+                                    <label for="prgNumber">Program Number</label>
+                                    <div class="input-wrapper">
+                                        <input id="prgNumber" type="number" value="1000" min="1" max="9999"/>
+                                        <i class="fas fa-file-code input-icon"></i>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="toolNumber">Tool Number</label>
+                                    <div class="input-wrapper">
+                                        <input id="toolNumber" type="number" value="1" min="1" max="999"/>
+                                        <i class="fas fa-wrench input-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="parameter-card">
+                                <h4><i class="fas fa-tachometer-alt"></i> Spindle Control</h4>
+                                <div class="form-group">
+                                    <label for="spindleSpeed">Spindle Speed (RPM)</label>
+                                    <div class="input-wrapper">
+                                        <input id="spindleSpeed" type="number" value="1200" min="1" max="10000"/>
+                                        <i class="fas fa-sync input-icon"></i>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="coolant">Coolant Control</label>
+                                    <select id="coolant">
+                                        <option value="M8">💧 ON (M8)</option>
+                                        <option value="M9">🚫 OFF (M9)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="parameter-card">
+                                <h4><i class="fas fa-crosshairs"></i> Work Coordinate</h4>
+                                <div class="form-group">
+                                    <label for="workOffset">Work Offset</label>
+                                    <select id="workOffset">
+                                        <option value="G54">G54 - Primary</option>
+                                        <option value="G55">G55 - Secondary</option>
+                                        <option value="G56">G56 - Tertiary</option>
+                                        <option value="G57">G57 - Quaternary</option>
+                                        <option value="G58">G58 - Quinary</option>
+                                        <option value="G59">G59 - Senary</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel fade-in">
+                <div class="panel-header">
+                    <h2 class="panel-title">
+                        <i class="fas fa-drill"></i>
+                        Cycle Parameters
+                    </h2>
+                </div>
+                <div class="panel-content">
+                    <div class="form-section">
+                        <div class="form-group">
+                            <label for="cannedCycle">Canned Cycle Type</label>
+                            <select id="cannedCycle" onchange="updateCycleInfo()">
+                                <option value="G81">🔧 Drilling (G81)</option>
+                                <option value="G82">⏱️ Drilling with Dwell (G82)</option>
+                                <option value="G83">🔄 Peck Drilling (G83)</option>
+                                <option value="G84">🔩 Rigid Tapping (G84)</option>
+                                <option value="G85">🎯 Reaming (G85)</option>
+                                <option value="G73">⚡ HS Peck Drilling (G73)</option>
+                                <option value="G74">↩️ Left Hand Tapping (G74)</option>
+                                <option value="G76">🔍 Fine Boring (G76)</option>
+                                <option value="G86">⏹️ Boring with Spindle Stop (G86)</option>
+                                <option value="G87">🔙 Back Boring (G87)</option>
+                                <option value="G88">✋ Boring with Manual Retract (G88)</option>
+                                <option value="G89">⏱️ Boring with Dwell (G89)</option>
+                            </select>
+                        </div>
+
+                        <div class="cycle-info" id="cycleInfo">
+                            Select a cycle type to see detailed information and parameters.
+                        </div>
+
+                        <div class="form-group">
+                            <label for="returnPoint">Return Point Strategy</label>
+                            <select id="returnPoint">
+                                <option value="G98">📈 G98 - Return to Initial Level</option>
+                                <option value="G99">📊 G99 - Return to R Level</option>
+                            </select>
+                        </div>
+
+                        <div class="parameter-grid">
+                            <div class="parameter-card">
+                                <h4><i class="fas fa-arrows-alt-v"></i> Z-Axis Control</h4>
+                                <div class="form-group">
+                                    <label for="startPoint">Initial Position (Z)</label>
+                                    <div class="input-wrapper">
+                                        <input id="startPoint" type="number" step="0.001" value="100"/>
+                                        <span class="input-icon">mm</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="rPoint">Start Point (R)</label>
+                                    <div class="input-wrapper">
+                                        <input id="rPoint" type="number" step="0.001" value="1"/>
+                                        <span class="input-icon">mm</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="depth">Hole Depth (Z)</label>
+                                    <div class="input-wrapper">
+                                        <input id="depth" type="number" step="0.001" value="-10"/>
+                                        <span class="input-icon">mm</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="parameter-card">
+                                <h4><i class="fas fa-tachometer-alt"></i> Feed & Speed</h4>
+                                <div class="form-group">
+                                    <label for="feedRate">Feed Rate (F)</label>
+                                    <div class="input-wrapper">
+                                        <input id="feedRate" type="number" value="100" min="1"/>
+                                        <span class="input-icon">mm/min</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="peckdepth">Peck Depth (Q)</label>
+                                    <div class="input-wrapper">
+                                        <input id="peckdepth" type="number" step="0.001" value="1"/>
+                                        <span class="input-icon">mm</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="dwellTime">Dwell Time (P)</label>
+                                    <div class="input-wrapper">
+                                        <input id="dwellTime" type="number" value="1000" min="0"/>
+                                        <span class="input-icon">ms</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="positions">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Drill Positions (X,Y coordinates)
+                            </label>
+                            <textarea id="positions" placeholder="Enter coordinates in format:&#10;10,20&#10;30,40&#10;50,60&#10;&#10;Or use the pattern generator below..."></textarea>
+                            <div class="quick-actions" style="margin-top: 0.5rem;">
+                                <button class="quick-btn" onclick="generatePattern('grid')">Grid Pattern</button>
+                                <button class="quick-btn" onclick="generatePattern('circle')">Circle Pattern</button>
+                                <button class="quick-btn" onclick="generatePattern('line')">Line Pattern</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel output-panel fade-in">
+                <div class="panel-header">
+                    <h2 class="panel-title">
+                        <i class="fas fa-terminal"></i>
+                        Generated G-Code Program
+                    </h2>
+                </div>
+                <div class="panel-content">
+                    <div class="alert alert-success" id="successAlert">
+                        <i class="fas fa-check-circle"></i>
+                        <span>G-Code generated successfully!</span>
+                    </div>
+
+                    <div class="alert alert-error" id="errorAlert">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Please check your input values.</span>
+                    </div>
+
+                    <div class="alert alert-warning" id="warningAlert">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>Warning: Check your parameters before machining.</span>
+                    </div>
+
+                    <div class="stats-grid" id="statsGrid" style="display: none;">
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalHoles">0</div>
+                            <div class="stat-label">Total Holes</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="estimatedTime">0</div>
+                            <div class="stat-label">Est. Time (min)</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalDepth">0</div>
+                            <div class="stat-label">Total Depth (mm)</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="codeLines">0</div>
+                            <div class="stat-label">Code Lines</div>
+                        </div>
+                    </div>
+
+                    <div style="position: relative;">
+                        <button class="copy-button tooltip" onclick="copyGCode()">
+                            <i class="fas fa-copy"></i>
+                            <span class="tooltiptext">Copy to clipboard</span>
+                        </button>
+                        <textarea id="gcodeOutput" class="gcode-output" readonly placeholder="Generated G-Code will appear here...&#10;&#10;Click 'Generate G-Code' to create your program."></textarea>
+                    </div>
+
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel fade-in">
+                <div class="panel-header">
+                    <h2 class="panel-title">
+                        <i class="fas fa-chart-line"></i>
+                        Toolpath Visualization
+                    </h2>
+                </div>
+                <div class="panel-content">
+                    <div class="visualization-container">
+                        <canvas id="toolpathCanvas" width="600" height="400"></canvas>
+                        <p style="margin-top: 1rem; color: var(--gray-500); font-size: 0.875rem;">
+                            <i class="fas fa-info-circle"></i>
+                            Red circles indicate drill positions. Blue dashed lines show toolpath sequence.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-section">
+                <div class="button-grid">
+                    <button class="btn btn-primary" onclick="generateGCode()">
+                        <i class="fas fa-code"></i>
+                        Generate G-Code
+                    </button>
+                    <button class="btn btn-secondary" onclick="downloadNcprg()">
+                        <i class="fas fa-download"></i>
+                        Download Program
+                    </button>
+                    <button class="btn btn-secondary" onclick="previewCode()">
+                        <i class="fas fa-eye"></i>
+                        Preview & Validate
+                    </button>
+                    <button class="btn btn-danger" onclick="resetAll()">
+                        <i class="fas fa-redo"></i>
+                        Reset All
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <script>
+        // Cycle information database
+        const cycleInfo = {
+            'G81': {
+                name: 'Standard Drilling',
+                description: 'Basic drilling cycle for through holes and blind holes.',
+                parameters: ['Z (depth)', 'R (start point)', 'F (feed rate)'],
+                usage: 'General purpose drilling operations'
+            },
+            'G82': {
+                name: 'Drilling with Dwell',
+                description: 'Drilling cycle with programmable dwell time at bottom.',
+                parameters: ['Z (depth)', 'R (start point)', 'F (feed rate)', 'P (dwell time)'],
+                usage: 'Precision holes requiring chip breaking'
+            },
+            'G83': {
+                name: 'Peck Drilling',
+                description: 'Deep hole drilling with chip evacuation.',
+                parameters: ['Z (depth)', 'R (start point)', 'Q (peck depth)', 'F (feed rate)'],
+                usage: 'Deep holes, difficult materials'
+            },
+            'G84': {
+                name: 'Rigid Tapping',
+                description: 'Synchronized tapping with spindle orientation.',
+                parameters: ['Z (depth)', 'R (start point)', 'F (feed rate)'],
+                usage: 'Threading operations with rigid tap holders'
+            },
+            'G85': {
+                name: 'Reaming',
+                description: 'Precision hole finishing operation.',
+                parameters: ['Z (depth)', 'R (start point)', 'F (feed rate)'],
+                usage: 'Final sizing and surface finishing'
+            }
+        };
+
+        // Enhanced G-Code generation with validation and progress
+        function generateGCode() {
+            showLoading(true);
+            
+            setTimeout(() => {
+                try {
+                    // Get all input values
+                    const inputs = {
+                        prgNumber: document.getElementById('prgNumber').value,
+                        toolNumber: document.getElementById('toolNumber').value,
+                        spindleSpeed: document.getElementById('spindleSpeed').value,
+                        coolant: document.getElementById('coolant').value,
+                        workOffset: document.getElementById('workOffset').value,
+                        returnPoint: document.getElementById('returnPoint').value,
+                        cannedCycle: document.getElementById('cannedCycle').value,
+                        startPoint: parseFloat(document.getElementById('startPoint').value),
+                        rPoint: parseFloat(document.getElementById('rPoint').value),
+                        depth: parseFloat(document.getElementById('depth').value),
+                        feedRate: document.getElementById('feedRate').value,
+                        peckdepth: parseFloat(document.getElementById('peckdepth').value),
+                        positions: document.getElementById('positions').value.trim().split('\n').filter(p => p.trim()),
+                        dwellTime: document.getElementById('dwellTime').value
+                    };
+
+                    // Validate inputs
+                    const validation = validateInputs(inputs);
+                    if (!validation.valid) {
+                        showAlert('error', validation.message);
+                        return;
+                    }
+
+                    // Generate G-Code with progress simulation
+                    updateProgress(25);
+                    const gcode = buildGCode(inputs);
+                    updateProgress(50);
+                    
+                    document.getElementById('gcodeOutput').value = gcode;
+                    updateProgress(75);
+                    
+                    // Update visualization and stats
+                    drawToolpath(inputs.positions);
+                    updateStats(inputs, gcode);
+                    updateProgress(100);
+                    
+                    // Show success
+                    showAlert('success', 'G-Code generated successfully! Ready for download.');
+                    
+                    setTimeout(() => updateProgress(0), 1000);
+                    
+                } catch (error) {
+                    showAlert('error', 'An error occurred while generating G-Code: ' + error.message);
+                    console.error(error);
+                } finally {
+                    showLoading(false);
+                }
+            }, 500);
+        }
+
+        function validateInputs(inputs) {
+            if (!inputs.prgNumber || !inputs.toolNumber || !inputs.spindleSpeed) {
+                return { valid: false, message: 'Please fill in all required machine parameters.' };
+            }
+            
+            if (inputs.startPoint <= inputs.depth) {
+                return { valid: false, message: 'Initial position must be higher than hole depth.' };
+            }
+            
+            if (inputs.rPoint <= inputs.depth) {
+                return { valid: false, message: 'R point must be higher than hole depth.' };
+            }
+            
+            if (inputs.positions.length === 0) {
+                return { valid: false, message: 'Please enter at least one drill position.' };
+            }
+
+            // Validate coordinate format
+            for (let i = 0; i < inputs.positions.length; i++) {
+                const coords = inputs.positions[i].split(',');
+                if (coords.length !== 2 || isNaN(coords[0]) || isNaN(coords[1])) {
+                    return { valid: false, message: `Invalid coordinate format at line ${i + 1}. Use format: X,Y` };
+                }
+            }
+            
+            return { valid: true };
+        }
+
+        function buildGCode(inputs) {
+            let gcode = "";
+            gcode += "%\n";
+            gcode += `(Program: O${inputs.prgNumber})\n`;
+            gcode += `(Generated: ${new Date().toLocaleString()})\n`;
+            gcode += `(Cycle: ${inputs.cannedCycle} - ${cycleInfo[inputs.cannedCycle]?.name || 'Unknown'})\n`;
+            gcode += `(Tool: T${inputs.toolNumber})\n`;
+            gcode += `(Holes: ${inputs.positions.length})\n`;
+            gcode += "\n";
+            
+            gcode += "O" + inputs.prgNumber + "\n";
+            gcode += "T" + inputs.toolNumber + "\n";
+            gcode += "M6\n";
+            
+            // Spindle direction based on cycle
+            if (inputs.cannedCycle === "G74") {
+                gcode += "S" + inputs.spindleSpeed + " M4 (Counter-clockwise for left-hand tap)\n";
+            } else {
+                gcode += "S" + inputs.spindleSpeed + " M3 (Clockwise)\n";
+            }
+
+            gcode += "G0 G90 " + inputs.workOffset + " X0 Y0\n";
+            gcode += "G43 H" + inputs.toolNumber + " Z" + inputs.startPoint.toFixed(3) + "\n";
+            
+            // Special handling for tapping cycles
+            if (["G84", "G74"].includes(inputs.cannedCycle)) {
+                gcode += "M135 S" + inputs.spindleSpeed + " (Rigid tap mode)\n";
+            }
+
+            gcode += inputs.coolant + "\n";
+            gcode += "\n";
+            
+            // Generate cycle command based on type
+            let cycleCommand = inputs.returnPoint + " " + inputs.cannedCycle;
+            cycleCommand += " Z" + inputs.depth.toFixed(3);
+            cycleCommand += " R" + inputs.rPoint.toFixed(3);
+            
+            if (["G83", "G73", "G84", "G76", "G74"].includes(inputs.cannedCycle)) {
+                cycleCommand += " Q" + inputs.peckdepth.toFixed(3);
+            }
+            
+            cycleCommand += " F" + inputs.feedRate;
+            
+            if (["G82", "G89"].includes(inputs.cannedCycle)) {
+                cycleCommand += " P" + inputs.dwellTime;
+            }
+            
+            cycleCommand += " L0 K0\n";
+            gcode += cycleCommand;
+            gcode += "\n";
+            
+            // Add position coordinates with comments
+            inputs.positions.forEach(function(pos, index) {
+                let coords = pos.split(',');
+                if (coords.length === 2 && !isNaN(coords[0]) && !isNaN(coords[1])) {
+                    let x = parseFloat(coords[0].trim());
+                    let y = parseFloat(coords[1].trim());
+                    gcode += `X${x.toFixed(3)} Y${y.toFixed(3)} (Hole ${index + 1})\n`;
+                }
+            });
+
+            gcode += "\n";
+            gcode += "G80 (Cancel canned cycle)\n";
+            gcode += "G91 G28 Z0 (Return to home)\n";
+            gcode += "M5 (Spindle stop)\n";
+            gcode += "M9 (Coolant off)\n";
+            gcode += "M30 (Program end)\n";
+            gcode += "%\n";
+            
+            return gcode;
+        }
+
+        function updateCycleInfo() {
+            const cycle = document.getElementById('cannedCycle').value;
+            const info = cycleInfo[cycle];
+            const infoDiv = document.getElementById('cycleInfo');
+            
+            if (info) {
+                infoDiv.innerHTML = `
+                    <strong>${info.name}</strong><br>
+                    ${info.description}<br>
+                    <strong>Parameters:</strong> ${info.parameters.join(', ')}<br>
+                    <strong>Usage:</strong> ${info.usage}
+                `;
+            } else {
+                infoDiv.innerHTML = 'Cycle information not available.';
+            }
+        }
+
+        function updateStats(inputs, gcode) {
+            const statsGrid = document.getElementById('statsGrid');
+            const totalHoles = inputs.positions.length;
+            const codeLines = gcode.split('\n').length;
+            const totalDepth = Math.abs(inputs.depth) * totalHoles;
+            const estimatedTime = Math.round((totalHoles * Math.abs(inputs.depth) / inputs.feedRate) * 2);
+            
+            document.getElementById('totalHoles').textContent = totalHoles;
+            document.getElementById('estimatedTime').textContent = estimatedTime;
+            document.getElementById('totalDepth').textContent = totalDepth.toFixed(1);
+            document.getElementById('codeLines').textContent = codeLines;
+            
+            statsGrid.style.display = 'grid';
+        }
+
+        function downloadNcprg() {
+            const gcode = document.getElementById('gcodeOutput').value;
+            if (!gcode.trim()) {
+                showAlert('error', 'Please generate G-Code first.');
+                return;
+            }
+            
+            const blob = new Blob([gcode], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = "O" + document.getElementById('prgNumber').value + ".nc";
+            link.click();
+            
+            showAlert('success', 'Program file downloaded successfully!');
+        }
+
+        function copyGCode() {
+            const gcode = document.getElementById('gcodeOutput').value;
+            if (!gcode.trim()) {
+                showAlert('error', 'No G-Code to copy.');
+                return;
+            }
+            
+            navigator.clipboard.writeText(gcode).then(() => {
+                showAlert('success', 'G-Code copied to clipboard!');
+            }).catch(() => {
+                showAlert('error', 'Failed to copy to clipboard.');
+            });
+        }
+
+        function previewCode() {
+            const gcode = document.getElementById('gcodeOutput').value;
+            if (!gcode.trim()) {
+                showAlert('warning', 'Generate G-Code first to preview.');
+                return;
+            }
+            
+            // Simple validation
+            const lines = gcode.split('\n');
+            let warnings = [];
+            
+            if (!gcode.includes('M30')) warnings.push('Missing program end (M30)');
+            if (!gcode.includes('G80')) warnings.push('Missing cycle cancel (G80)');
+            
+            if (warnings.length > 0) {
+                showAlert('warning', 'Validation warnings: ' + warnings.join(', '));
+            } else {
+                showAlert('success', 'G-Code validation passed! Program looks good.');
+            }
+        }
+
+        function resetAll() {
+            // Reset all form fields
+            document.getElementById('prgNumber').value = 1000;
+            document.getElementById('toolNumber').value = 1;
+            document.getElementById('spindleSpeed').value = 1200;
+            document.getElementById('coolant').value = "M8";
+            document.getElementById('workOffset').value = "G54";
+            document.getElementById('cannedCycle').value = "G81";
+            document.getElementById('returnPoint').value = "G98";
+            document.getElementById('startPoint').value = 100;
+            document.getElementById('rPoint').value = 1;
+            document.getElementById('depth').value = -10;
+            document.getElementById('peckdepth').value = 1;
+            document.getElementById('feedRate').value = 100;
+            document.getElementById('dwellTime').value = 1000;
+            document.getElementById('positions').value = "";
+            document.getElementById('gcodeOutput').value = "";
+            
+            // Clear canvas and stats
+            const canvas = document.getElementById('toolpathCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            document.getElementById('statsGrid').style.display = 'none';
+            updateProgress(0);
+            hideAlerts();
+            updateCycleInfo();
+            
+            showAlert('success', 'All fields have been reset to default values.');
+        }
+
+        function loadPreset(type) {
+            switch(type) {
+                case 'drilling':
+                    document.getElementById('cannedCycle').value = 'G83';
+                    document.getElementById('spindleSpeed').value = 1500;
+                    document.getElementById('feedRate').value = 150;
+                    document.getElementById('peckdepth').value = 2;
+                    break;
+                case 'tapping':
+                    document.getElementById('cannedCycle').value = 'G84';
+                    document.getElementById('spindleSpeed').value = 800;
+                    document.getElementById('feedRate').value = 800;
+                    break;
+                case 'reaming':
+                    document.getElementById('cannedCycle').value = 'G85';
+                    document.getElementById('spindleSpeed').value = 600;
+                    document.getElementById('feedRate').value = 50;
+                    break;
+            }
+            updateCycleInfo();
+            showAlert('success', `${type.charAt(0).toUpperCase() + type.slice(1)} preset loaded!`);
+        }
+
+        function generatePattern(type) {
+            let pattern = '';
+            switch(type) {
+                case 'grid':
+                    for (let x = 0; x <= 40; x += 20) {
+                        for (let y = 0; y <= 40; y += 20) {
+                            pattern += `${x},${y}\n`;
+                        }
+                    }
+                    break;
+                case 'circle':
+                    const radius = 20;
+                    const holes = 8;
+                    for (let i = 0; i < holes; i++) {
+                        const angle = (i * 2 * Math.PI) / holes;
+                        const x = Math.round(radius * Math.cos(angle) * 10) / 10;
+                        const y = Math.round(radius * Math.sin(angle) * 10) / 10;
+                        pattern += `${x},${y}\n`;
+                    }
+                    break;
+                case 'line':
+                    for (let i = 0; i <= 50; i += 10) {
+                        pattern += `${i},0\n`;
+                    }
+                    break;
+            }
+            document.getElementById('positions').value = pattern.trim();
+            showAlert('success', `${type.charAt(0).toUpperCase() + type.slice(1)} pattern generated!`);
+        }
+
+        function drawToolpath(positions) {
+            const canvas = document.getElementById('toolpathCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw enhanced grid
+            ctx.strokeStyle = var(--gray-200);
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= canvas.width; i += 50) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, canvas.height);
+                ctx.stroke();
+            }
+            for (let j = 0; j <= canvas.height; j += 50) {
+                ctx.beginPath();
+                ctx.moveTo(0, j);
+                ctx.lineTo(canvas.width, j);
+                ctx.stroke();
+            }
+
+            // Draw coordinate labels
+            ctx.fillStyle = var(--gray-400);
+            ctx.font = '10px Inter';
+            ctx.textAlign = 'center';
+            for (let i = 50; i <= canvas.width; i += 50) {
+                ctx.fillText((i - 50) / 8, i, canvas.height - 5);
+            }
+            ctx.textAlign = 'right';
+            for (let j = 50; j <= canvas.height; j += 50) {
+                ctx.fillText((canvas.height - j) / 8, 45, j + 3);
+            }
+
+            if (positions.length === 0) return;
+
+            // Draw toolpath with animation effect
+            const validPositions = positions.filter(pos => {
+                const coords = pos.split(',');
+                return coords.length === 2 && !isNaN(coords[0]) && !isNaN(coords[1]);
+            });
+
+            // Draw connecting lines first
+            if (validPositions.length > 1) {
+                ctx.strokeStyle = '#6366f1';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([8, 4]);
+                ctx.globalAlpha = 0.6;
+                
+                ctx.beginPath();
+                validPositions.forEach((pos, index) => {
+                    const coords = pos.split(',');
+                    const x = parseFloat(coords[0].trim());
+                    const y = parseFloat(coords[1].trim());
+                    const cx = x * 8 + 50;
+                    const cy = canvas.height - y * 8 - 50;
+                    
+                    if (index === 0) {
+                        ctx.moveTo(cx, cy);
+                    } else {
+                        ctx.lineTo(cx, cy);
+                    }
+                });
+                ctx.stroke();
+                ctx.setLineDash([]);
+                ctx.globalAlpha = 1;
+            }
+
+            // Draw drill points with enhanced styling
+            validPositions.forEach((pos, index) => {
+                const coords = pos.split(',');
+                const x = parseFloat(coords[0].trim());
+                const y = parseFloat(coords[1].trim());
+                const cx = x * 8 + 50;
+                const cy = canvas.height - y * 8 - 50;
+
+                // Outer ring
+                ctx.beginPath();
+                ctx.arc(cx, cy, 12, 0, 2 * Math.PI);
+                ctx.fillStyle = '#ef4444';
+                ctx.fill();
+                
+                // Inner circle
+                ctx.beginPath();
+                ctx.arc(cx, cy, 8, 0, 2 * Math.PI);
+                ctx.fillStyle = '#dc2626';
+                ctx.fill();
+                
+                // Center dot
+                ctx.beginPath();
+                ctx.arc(cx, cy, 3, 0, 2 * Math.PI);
+                ctx.fillStyle = 'white';
+                ctx.fill();
+
+                // Position label with background
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                ctx.fillRect(cx - 25, cy - 35, 50, 16);
+                ctx.fillStyle = 'white';
+                ctx.font = '11px Inter';
+                ctx.textAlign = 'center';
+                ctx.fillText(`${x}, ${y}`, cx, cy - 25);
+                
+                // Hole number
+                ctx.fillStyle = '#6366f1';
+                ctx.font = 'bold 10px Inter';
+                ctx.fillText(index + 1, cx, cy + 25);
+            });
+        }
+
+        function showAlert(type, message) {
+            hideAlerts();
+            const alert = document.getElementById(type + 'Alert');
+            if (alert) {
+                alert.style.display = 'flex';
+                alert.querySelector('span').textContent = message;
+                
+                setTimeout(() => {
+                    hideAlerts();
+                }, 5000);
+            }
+        }
+
+        function hideAlerts() {
+            document.querySelectorAll('.alert').forEach(alert => {
+                alert.style.display = 'none';
+            });
+        }
+
+        function showLoading(show) {
+            document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
+        }
+
+        function updateProgress(percent) {
+            document.getElementById('progressFill').style.width = percent + '%';
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add input validation with real-time feedback
+            const inputs = document.querySelectorAll('input[type="number"]');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    if (this.value < 0 && this.id !== 'depth') {
+                        this.value = Math.abs(this.value);
+                    }
+                    
+                    // Add visual feedback for valid/invalid inputs
+                    if (this.checkValidity()) {
+                        this.style.borderColor = var(--success-500);
+                    } else {
+                        this.style.borderColor = var(--error-500);
+                    }
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.style.borderColor = var(--gray-200);
+                });
+            });
+
+            // Enhanced keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === 'Enter') {
+                    e.preventDefault();
+                    generateGCode();
+                }
+                if (e.ctrlKey && e.key === 's') {
+                    e.preventDefault();
+                    downloadNcprg();
+                }
+                if (e.ctrlKey && e.key === 'r') {
+                    e.preventDefault();
+                    resetAll();
+                }
+            });
+
+            // Initialize cycle info
+            updateCycleInfo();
+            
+            // Add smooth scroll behavior
+            document.documentElement.style.scrollBehavior = 'smooth';
+            
+            // Initialize canvas with grid
+            const canvas = document.getElementById('toolpathCanvas');
+            const ctx = canvas.getContext('2d');
+            drawToolpath([]);
+        });
+
+        // Add some sample data for demonstration
+        setTimeout(() => {
+            document.getElementById('positions').value = "10,10\n30,10\n50,10\n10,30\n30,30\n50,30";
+        }, 1000);
+    </script>
+</body>
+</html>
